@@ -4,17 +4,18 @@ function Question({ question, onAnswered }) {
   const [timeRemaining, setTimeRemaining] = useState(10);
 
   useEffect(() => {
-    setTimeout(
-      () =>
-        timeRemaining !== 0 ? setTimeRemaining(timeRemaining - 1) : timesUp,
-      1000
-    );
+    let timer = setTimeout(() => {
+      if (timeRemaining !== 0) {
+        setTimeRemaining(timeRemaining - 1);
+      } else {
+        onAnswered(false);
+        setTimeRemaining(10);
+      }
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [timeRemaining]);
-
-  function timesUp() {
-    setTimeRemaining(10);
-    onAnswered(false);
-  }
 
   function handleAnswer(isCorrect) {
     setTimeRemaining(10);
